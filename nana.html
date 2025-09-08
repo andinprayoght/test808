@@ -4,10 +4,9 @@ import fetch from "node-fetch";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware agar body selalu tersedia
+// Biar req.body selalu ada jika POST/PUT
 app.use(express.text({ type: "*/*" }));
 
-// Mapping prefix ke host CDN
 const hosts = {
   twnx1: "https://twnx1-cf.boblcfwudz421.com",
   twnx2: "https://twnx2-cf.boblcfwudz421.com",
@@ -21,7 +20,7 @@ app.all("*", async (req, res) => {
     const host = hosts[prefix];
     if (!host) return res.status(400).send("Invalid prefix");
 
-    // Buat URL target lengkap dengan query string
+    // Gabungkan path + query string dengan aman
     const query = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
     const targetUrl = host + "/" + pathParts.slice(2).join("/") + query;
 
@@ -43,8 +42,8 @@ app.all("*", async (req, res) => {
       "Access-Control-Allow-Headers": "*",
     });
 
-    // Pipe hasil upstream
-    if (upstream.body) {
+    // Pipe streaming langsung
+    if (upstream.body && upstream.body.pipe) {
       upstream.body.pipe(res);
       upstream.body.on("error", (err) => {
         console.error("Stream error:", err);
@@ -59,6 +58,4 @@ app.all("*", async (req, res) => {
   }
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Proxy running on port ${PORT}`);
-});
+app.listen(PORT, "0.0.0.0", () => console.log(`Proxy running on port ${PORT}`));
