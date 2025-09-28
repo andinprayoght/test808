@@ -12,6 +12,7 @@ const hosts = {
   twnx1: "https://twnx1-cf.boblcfwudz421.com",
   twnx2: "https://twnx2-cf.boblcfwudz421.com",
   twnx3: "https://twnx3-cf.boblcfwudz421.com",
+  t2nt1: "https://t2nt1-cf.boblcfwudz421.com",
   t2nt2: "https://t2nt2-cf.boblcfwudz421.com",
   t2nt3: "https://t2nt3-cf.boblcfwudz421.com",
 };
